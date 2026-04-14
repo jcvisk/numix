@@ -1,0 +1,102 @@
+name: "numix"
+services:
+  redis:
+    image: redis:latest
+    container_name: numix-redis
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - TZ=America/Merida
+    command: [ "redis-server", "--requirepass", "${REDIS_PASSWORD}" ]
+    ports:
+      - "6380:6379"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - numix_net
+  postgres:
+    image: postgres:16
+    container_name: numix_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: America/Merida
+      PGTZ: America/Merida
+    ports:
+      - "54325:5432"
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - numix_net
+  s3:
+    image: minio/minio:latest
+    container_name: numix_s3
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      TZ: America/Merida
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    volumes:
+      - ./s3/data:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - numix_net
+  wildfly:
+    image: "wildfly-numix"
+    build: .
+    container_name: numix_wildfly
+    ports:
+      - "8080:8080"
+      - 5014:5005
+    volumes:
+      - ./log:/opt/wildfly/standalone/log
+      - ./wildfly/deployments:/opt/wildfly/standalone/deployments
+      - ./configfiles/emailsenderconf/credentials.properties:/opt/wildfly/standalone/configuration/emailsenderconf/credentials.properties:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - postgres
+    environment:
+      - TZ=America/Merida
+      - JAVA_OPTS=-Djboss.bind.address=0.0.0.0 -Duser.timezone=America/Merida -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005
+      - NUMIX_EMAIL_ACTION_LINK_BASE_URL=${NUMIX_EMAIL_ACTION_LINK_BASE_URL}
+      - S3_ENDPOINT=http://s3:9000
+      - S3_ACCESS_KEY=${MINIO_ROOT_USER}
+      - S3_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_REGION=us-east-1
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+    networks:
+      - numix_net
+  wildfly-numix-secondary:
+    image: "wildfly-numix"
+    build: .
+    container_name: numix_wildfly_numix_secondary
+    ports:
+      - "8081:8080"
+      - 5015:5005
+    volumes:
+      - ./log/numix-secondary-web:/opt/wildfly/standalone/log
+      - ./wildfly-numix-secondary/deployments:/opt/wildfly/standalone/deployments
+      - ./configfiles/emailsenderconf/credentials.properties:/opt/wildfly/standalone/configuration/emailsenderconf/credentials.properties:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - postgres
+    environment:
+      - TZ=America/Merida
+      - JAVA_OPTS=-Djboss.bind.address=0.0.0.0 -Duser.timezone=America/Merida -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005
+      - NUMIX_EMAIL_ACTION_LINK_BASE_URL=${NUMIX_EMAIL_ACTION_LINK_BASE_URL_SECONDARY}
+      - S3_ENDPOINT=http://s3:9000
+      - S3_ACCESS_KEY=${MINIO_ROOT_USER}
+      - S3_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_REGION=us-east-1
+    networks:
+      - numix_net
+volumes: {}
+
+networks:
+  numix_net:
+    name: numix_net
