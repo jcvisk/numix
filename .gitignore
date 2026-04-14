@@ -1,0 +1,77 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+*.pid
+*.seed
+*.pid.lock
+hs_err_pid*
+replay_pid*
+
+# Java / Maven / Spring build outputs
+**/target/
+out/
+build/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+
+# Maven wrapper and cache artifacts
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Test and coverage outputs
+surefire-reports/
+failsafe-reports/
+site/
+coverage/
+.jacoco/
+*.exec
+
+# Spring Boot and runtime artifacts
+spring.log
+*.hprof
+
+# Local databases / embedded stores
+*.db
+*.mv.db
+*.trace.db
+
+# OS generated
+Thumbs.db
+Desktop.ini
+
+# Docker local runtime data
+/docker/postgres/data/
+/docker/s3/data/
+
+# Node artifacts (if frontend tooling is added)
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+
+# Misc caches
+.cache/
+.tmp/
