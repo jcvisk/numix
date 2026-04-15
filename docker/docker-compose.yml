@@ -45,54 +45,26 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - numix_net
-  wildfly:
-    image: "wildfly-numix"
-    build: .
-    container_name: numix_wildfly
+  app:
+    image: numix-app-tomcat
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: numix_app_tomcat
     ports:
-      - "8080:8080"
-      - 5014:5005
-    volumes:
-      - ./log:/opt/wildfly/standalone/log
-      - ./wildfly/deployments:/opt/wildfly/standalone/deployments
-      - ./configfiles/emailsenderconf/credentials.properties:/opt/wildfly/standalone/configuration/emailsenderconf/credentials.properties:ro
-      - /etc/localtime:/etc/localtime:ro
+      - "8082:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      TOMCAT_MANAGER_USERNAME: ${TOMCAT_MANAGER_USERNAME:-cargo}
+      TOMCAT_MANAGER_PASSWORD: ${TOMCAT_MANAGER_PASSWORD:-cargo123}
+      TZ: America/Merida
     depends_on:
       - postgres
-    environment:
-      - TZ=America/Merida
-      - JAVA_OPTS=-Djboss.bind.address=0.0.0.0 -Duser.timezone=America/Merida -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005
-      - NUMIX_EMAIL_ACTION_LINK_BASE_URL=${NUMIX_EMAIL_ACTION_LINK_BASE_URL}
-      - S3_ENDPOINT=http://s3:9000
-      - S3_ACCESS_KEY=${MINIO_ROOT_USER}
-      - S3_SECRET_KEY=${MINIO_ROOT_PASSWORD}
-      - S3_REGION=us-east-1
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
-    networks:
-      - numix_net
-  wildfly-numix-secondary:
-    image: "wildfly-numix"
-    build: .
-    container_name: numix_wildfly_numix_secondary
-    ports:
-      - "8081:8080"
-      - 5015:5005
-    volumes:
-      - ./log/numix-secondary-web:/opt/wildfly/standalone/log
-      - ./wildfly-numix-secondary/deployments:/opt/wildfly/standalone/deployments
-      - ./configfiles/emailsenderconf/credentials.properties:/opt/wildfly/standalone/configuration/emailsenderconf/credentials.properties:ro
-      - /etc/localtime:/etc/localtime:ro
-    depends_on:
-      - postgres
-    environment:
-      - TZ=America/Merida
-      - JAVA_OPTS=-Djboss.bind.address=0.0.0.0 -Duser.timezone=America/Merida -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005
-      - NUMIX_EMAIL_ACTION_LINK_BASE_URL=${NUMIX_EMAIL_ACTION_LINK_BASE_URL_SECONDARY}
-      - S3_ENDPOINT=http://s3:9000
-      - S3_ACCESS_KEY=${MINIO_ROOT_USER}
-      - S3_SECRET_KEY=${MINIO_ROOT_PASSWORD}
-      - S3_REGION=us-east-1
+      - redis
+      - s3
     networks:
       - numix_net
 volumes: {}

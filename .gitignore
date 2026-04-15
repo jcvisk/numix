@@ -66,6 +66,9 @@ Desktop.ini
 /docker/postgres/data/
 /docker/s3/data/
 
+# Static HTML templates copied in web static root
+/web/src/main/resources/static/*.html
+
 # Node artifacts (if frontend tooling is added)
 node_modules/
 .npm/
