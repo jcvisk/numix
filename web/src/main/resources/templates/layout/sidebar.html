@@ -1,0 +1,128 @@
+<div th:fragment="sidebar" class="left-sidebar-pro">
+    <nav id="sidebar" class="">
+        <div class="sidebar-header">
+            <a th:href="@{/index.html}"><img class="main-logo" th:src="@{/img/logo/logo.png}" alt="" /></a>
+            <strong><img th:src="@{/img/logo/logosn.png}" alt="" /></strong>
+        </div>
+        <div class="nalika-profile">
+            <div class="profile-dtl">
+                <a href="#"><img src="https://avatars.githubusercontent.com/u/3451398?s=200&v=4" alt="Aigars Silkalns" /></a>
+                <h2>Aigars <span class="min-dtn">Silkalns</span></h2>
+            </div>
+            <div class="profile-social-dtl">
+                <ul class="dtl-social">
+                    <li><a href="#"><i class="bi bi-facebook"></i></a></li>
+                    <li><a href="#"><i class="bi bi-twitter-x"></i></a></li>
+                    <li><a href="#"><i class="bi bi-linkedin"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="left-custom-menu-adp-wrap comment-scrollbar">
+            <nav class="sidebar-nav left-sidebar-menu-pro">
+                <ul class="metismenu" id="menu1">
+                    <li class="active">
+                        <a class="has-arrow" th:href="@{/index.html}">
+                            <i class="bi big-icon bi-speedometer2 icon-wrap"></i>
+                            <span class="mini-click-non">Dashboards</span>
+                        </a>
+                        <ul class="submenu-angle" aria-expanded="true">
+                            <li><a title="Main Dashboard" th:href="@{/index.html}"><span class="mini-sub-pro">Main Dashboard</span></a></li>
+                            <li><a title="Analytics" th:href="@{/index-1.html}"><span class="mini-sub-pro">Analytics</span></a></li>
+                            <li><a title="Projects" th:href="@{/index-2.html}"><span class="mini-sub-pro">Projects</span></a></li>
+                            <li><a title="Statistics" th:href="@{/analytics.html}"><span class="mini-sub-pro">Statistics</span></a></li>
+                            <li><a title="Widgets" th:href="@{/widgets.html}"><span class="mini-sub-pro">Widgets</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" th:href="@{/product-list.html}" aria-expanded="false"><i class="bi big-icon bi-bag icon-wrap"></i> <span class="mini-click-non">Ecommerce</span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a title="Product List" th:href="@{/product-list.html}"><span class="mini-sub-pro">Product List</span></a></li>
+                            <li><a title="Product Edit" th:href="@{/product-edit.html}"><span class="mini-sub-pro">Product Edit</span></a></li>
+                            <li><a title="Product Detail" th:href="@{/product-detail.html}"><span class="mini-sub-pro">Product Detail</span></a></li>
+                            <li><a title="Product Cart" th:href="@{/product-cart.html}"><span class="mini-sub-pro">Product Cart</span></a></li>
+                            <li><a title="Product Payment" th:href="@{/product-payment.html}"><span class="mini-sub-pro">Product Payment</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" th:href="@{/mailbox.html}" aria-expanded="false"><i class="bi big-icon bi-envelope icon-wrap"></i> <span class="mini-click-non">Mailbox</span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a title="Inbox" th:href="@{/mailbox.html}"><span class="mini-sub-pro">Inbox</span></a></li>
+                            <li><a title="View Mail" th:href="@{/mailbox-view.html}"><span class="mini-sub-pro">View Mail</span></a></li>
+                            <li><a title="Compose Mail" th:href="@{/mailbox-compose.html}"><span class="mini-sub-pro">Compose Mail</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" th:href="@{/kanban-board.html}" aria-expanded="false"><i class="bi big-icon bi-grid-3x3 icon-wrap"></i> <span class="mini-click-non">Interface</span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a title="Kanban Board" th:href="@{/kanban-board.html}"><span class="mini-sub-pro">Kanban Board</span></a></li>
+                            <li><a title="Activity Timeline" th:href="@{/activity-timeline.html}"><span class="mini-sub-pro">Activity Timeline</span></a></li>
+                            <li><a title="Calendar" th:href="@{/calendar.html}"><span class="mini-sub-pro">Calendar</span></a></li>
+                            <li><a title="Code Editor" th:href="@{/code-editor.html}"><span class="mini-sub-pro">Code Editor</span></a></li>
+                            <li><a title="Images Cropper" th:href="@{/images-cropper.html}"><span class="mini-sub-pro">Images Cropper</span></a></li>
+                            <li><a title="PDF Viewer" th:href="@{/pdf-viewer.html}"><span class="mini-sub-pro">PDF Viewer</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" th:href="@{/file-manager.html}" aria-expanded="false"><i class="bi big-icon bi-pie-chart icon-wrap"></i> <span class="mini-click-non">Miscellaneous</span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a title="File Manager" th:href="@{/file-manager.html}"><span class="mini-sub-pro">File Manager</span></a></li>
+                            <li><a title="Blog" th:href="@{/blog.html}"><span class="mini-sub-pro">Blog</span></a></li>
+                            <li><a title="Blog Details" th:href="@{/blog-details.html}"><span class="mini-sub-pro">Blog Details</span></a></li>
+                            <li><a title="404 Page" th:href="@{/404.html}"><span class="mini-sub-pro">404 Page</span></a></li>
+                            <li><a title="500 Page" th:href="@{/500.html}"><span class="mini-sub-pro">500 Page</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" th:href="@{/bar-charts.html}" aria-expanded="false"><i class="bi big-icon bi-bar-chart icon-wrap"></i> <span class="mini-click-non">Charts</span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a title="Bar Charts" th:href="@{/bar-charts.html}"><span class="mini-sub-pro">Bar Charts</span></a></li>
+                            <li><a title="Line Charts" th:href="@{/line-charts.html}"><span class="mini-sub-pro">Line Charts</span></a></li>
+                            <li><a title="Area Charts" th:href="@{/area-charts.html}"><span class="mini-sub-pro">Area Charts</span></a></li>
+                            <li><a title="Rounded Charts" th:href="@{/rounded-chart.html}"><span class="mini-sub-pro">Rounded Charts</span></a></li>
+                            <li><a title="Mixed Charts" th:href="@{/c3.html}"><span class="mini-sub-pro">Mixed Charts</span></a></li>
+                            <li><a title="Sparkline Charts" th:href="@{/sparkline.html}"><span class="mini-sub-pro">Sparkline Charts</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" th:href="@{/static-table.html}" aria-expanded="false"><i class="bi big-icon bi-table icon-wrap"></i> <span class="mini-click-non">Data Tables</span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a title="Static Table" th:href="@{/static-table.html}"><span class="mini-sub-pro">Static Table</span></a></li>
+                            <li><a title="Data Table" th:href="@{/data-table.html}"><span class="mini-sub-pro">Data Table</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" th:href="@{/basic-form-element.html}" aria-expanded="false"><i class="bi big-icon bi-ui-checks icon-wrap"></i> <span class="mini-click-non">Forms</span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a title="Basic Form Elements" th:href="@{/basic-form-element.html}"><span class="mini-sub-pro">Basic Elements</span></a></li>
+                            <li><a title="Advance Form Elements" th:href="@{/advance-form-element.html}"><span class="mini-sub-pro">Advanced Elements</span></a></li>
+                            <li><a title="Password Meter" th:href="@{/password-meter.html}"><span class="mini-sub-pro">Password Meter</span></a></li>
+                            <li><a title="Multi Upload" th:href="@{/multi-upload.html}"><span class="mini-sub-pro">Multi Upload</span></a></li>
+                            <li><a title="Text Editor" th:href="@{/tinymc.html}"><span class="mini-sub-pro">Text Editor</span></a></li>
+                            <li><a title="Dual List Box" th:href="@{/dual-list-box.html}"><span class="mini-sub-pro">Dual List Box</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" th:href="@{/notifications.html}" aria-expanded="false"><i class="bi big-icon bi-display icon-wrap"></i> <span class="mini-click-non">App Views</span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a title="Notifications" th:href="@{/notifications.html}"><span class="mini-sub-pro">Notifications</span></a></li>
+                            <li><a title="Alerts" th:href="@{/alerts.html}"><span class="mini-sub-pro">Alerts</span></a></li>
+                            <li><a title="Modals" th:href="@{/modals.html}"><span class="mini-sub-pro">Modals</span></a></li>
+                            <li><a title="Buttons" th:href="@{/buttons.html}"><span class="mini-sub-pro">Buttons</span></a></li>
+                            <li><a title="Tabs" th:href="@{/tabs.html}"><span class="mini-sub-pro">Tabs</span></a></li>
+                            <li><a title="Accordion" th:href="@{/accordion.html}"><span class="mini-sub-pro">Accordion</span></a></li>
+                        </ul>
+                    </li>
+                    <li id="removable">
+                        <a class="has-arrow" href="#" aria-expanded="false"><i class="bi big-icon bi-files icon-wrap"></i> <span class="mini-click-non">Pages</span></a>
+                        <ul class="submenu-angle" aria-expanded="false">
+                            <li><a title="Login" th:href="@{/login.html}"><span class="mini-sub-pro">Login</span></a></li>
+                            <li><a title="Register" th:href="@{/register.html}"><span class="mini-sub-pro">Register</span></a></li>
+                            <li><a title="Lock" th:href="@{/lock.html}"><span class="mini-sub-pro">Lock</span></a></li>
+                            <li><a title="Password Recovery" th:href="@{/password-recovery.html}"><span class="mini-sub-pro">Password Recovery</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </nav>
+</div>
