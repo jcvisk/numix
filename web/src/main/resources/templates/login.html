@@ -108,10 +108,10 @@
             <div class="nk-auth-logo mb-2">N<span>alika</span></div>
             <p class="text-secondary mb-4" style="font-size:14px;">Sign in to your dashboard</p>
 
-            <div th:if="${param.error}" class="alert alert-danger text-start py-2" role="alert">
+            <div th:if="${param.error}" class="py-2 text-danger">
                 Invalid username or password.
             </div>
-            <div th:if="${param.logout}" class="alert alert-success text-start py-2" role="alert">
+            <div th:if="${param.logout}" class="py-2 text-light">
                 You have signed out successfully.
             </div>
 
