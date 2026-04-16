@@ -5,6 +5,75 @@
 
 'use strict';
 
+var THEME_STORAGE_KEY = 'numix-theme';
+
+function getStoredTheme() {
+  try {
+    return localStorage.getItem(THEME_STORAGE_KEY);
+  } catch (e) {
+    return null;
+  }
+}
+
+function getPreferredTheme() {
+  var stored = getStoredTheme();
+  if (stored === 'light' || stored === 'dark') return stored;
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+
+function applyTheme(theme, persist) {
+  var resolved = theme === 'light' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', resolved);
+
+  if (persist) {
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, resolved);
+    } catch (e) {
+      // Ignore storage errors in private mode/restricted environments.
+    }
+  }
+
+  var toggleButton = document.getElementById('themeToggle');
+  if (!toggleButton) return;
+
+  var icon = toggleButton.querySelector('i');
+  if (icon) {
+    icon.className = resolved === 'light' ? 'bi bi-moon-stars' : 'bi bi-sun';
+  }
+
+  var label = resolved === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro';
+  toggleButton.setAttribute('title', label);
+  toggleButton.setAttribute('aria-label', label);
+}
+
+function initThemeToggle() {
+  applyTheme(getPreferredTheme(), false);
+
+  var toggleButton = document.getElementById('themeToggle');
+  if (toggleButton) {
+    toggleButton.addEventListener('click', function () {
+      var current = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = current === 'light' ? 'dark' : 'light';
+      applyTheme(next, true);
+    });
+  }
+
+  var media = window.matchMedia('(prefers-color-scheme: light)');
+  if (typeof media.addEventListener === 'function') {
+    media.addEventListener('change', function () {
+      if (!getStoredTheme()) {
+        applyTheme(getPreferredTheme(), false);
+      }
+    });
+  } else if (typeof media.addListener === 'function') {
+    media.addListener(function () {
+      if (!getStoredTheme()) {
+        applyTheme(getPreferredTheme(), false);
+      }
+    });
+  }
+}
+
 function initTooltips() {
   if (typeof bootstrap === 'undefined') return;
   document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
@@ -216,6 +285,7 @@ function initCounters() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  initThemeToggle();
   initTooltips();
   initPopovers();
   initSidebar();
