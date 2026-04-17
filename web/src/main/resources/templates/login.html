@@ -108,8 +108,17 @@
             <div class="nk-auth-logo mb-2">N<span>umix</span></div>
             <p class="text-secondary mb-4" style="font-size:14px;" th:text="#{login.signin.subtitle}">Sign in to your dashboard</p>
 
-            <div th:if="${param.error}" class="py-2 text-danger" th:text="#{login.error.invalid}">
-                Invalid username or password.
+            <div th:if="${param.error != null and param.error[0] == 'invalid'}" class="py-2 text-danger">
+                Correo o contraseña inválidos.
+            </div>
+            <div th:if="${param.error != null and param.error[0] == 'user-disabled'}" class="py-2 text-danger">
+                Tu usuario está inactivo. Contacta al administrador de la cuenta.
+            </div>
+            <div th:if="${param.error != null and param.error[0] == 'account-suspended'}" class="py-2 text-danger">
+                La cuenta está suspendida y no puede acceder al sistema.
+            </div>
+            <div th:if="${successMessage}" class="py-2 text-success" th:text="${successMessage}">
+                Cuenta creada. Ya puedes iniciar sesión.
             </div>
             <div th:if="${param.logout}" class="py-2 text-light" th:text="#{login.logout.success}">
                 You have signed out successfully.
@@ -136,7 +145,7 @@
                 </div>
                 <button type="submit" class="btn btn-nk-primary w-100 mb-3" th:text="#{login.submit}">Sign In</button>
                 <div class="nk-divider"><span th:text="#{login.divider.or}">or</span></div>
-                <a href="/register.html" class="btn btn-nk-outline w-100" th:text="#{login.create.account}">Create an account</a>
+                <a th:href="@{/register}" class="btn btn-nk-outline w-100" th:text="#{login.create.account}">Create an account</a>
             </form>
         </div>
 

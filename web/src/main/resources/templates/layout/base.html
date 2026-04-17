@@ -17,6 +17,10 @@
             }
         })();
     </script>
+
+    <script th:src="@{/vue/axios.min.js}"></script>
+    <script th:src="@{/vue/vue.global.js}"></script>
+
     <!-- favicon
 		============================================ -->
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/favicon.ico}">
@@ -50,7 +54,7 @@
 
 <th:block th:replace="~{layout/sidebar :: sidebar}"></th:block>
 <!-- Start Welcome area -->
-<div class="all-content-wrapper">
+<div id="app" class="all-content-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-12">
