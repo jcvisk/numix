@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Nalika is a Colorlib dark-design Bootstrap admin dashboard template (MIT license). It contains 48 HTML pages covering dashboards, e-commerce, forms, charts, tables, mailbox, auth pages, and error pages. Migrated to Bootstrap 5.3.8 + vanilla JS (no jQuery).
+Numix is a Colorlib dark-design Bootstrap admin dashboard template (MIT license). It contains 48 HTML pages covering dashboards, e-commerce, forms, charts, tables, mailbox, auth pages, and error pages. Migrated to Bootstrap 5.3.8 + vanilla JS (no jQuery).
 
 ## Repository Structure
 

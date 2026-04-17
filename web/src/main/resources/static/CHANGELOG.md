@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the Nalika admin dashboard template.
+All notable changes to the Numix admin dashboard template.
 
 ## [2.0.0] - 2026-02-13
 

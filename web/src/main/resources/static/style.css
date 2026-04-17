@@ -96,6 +96,39 @@
   --nk-z-tooltip:    700;
 }
 
+[data-theme="light"] {
+  --nk-bg-body:        #eef2f6;
+  --nk-bg-surface:     #f8fafc;
+  --nk-bg-elevated:    #f2f6fb;
+  --nk-bg-inset:       #e6edf5;
+
+  --nk-text-primary:   #263445;
+  --nk-text-secondary: #5c6d83;
+  --nk-text-muted:     #7a8aa0;
+  --nk-text-inverse:   #ffffff;
+
+  --nk-border-default: #d5dee9;
+  --nk-border-subtle:  rgba(38, 52, 69, 0.07);
+
+  --nk-shadow-sm:      0 1px 2px rgba(38, 52, 69, 0.06);
+  --nk-shadow-md:      0 4px 12px rgba(38, 52, 69, 0.08);
+  --nk-shadow-lg:      0 8px 24px rgba(38, 52, 69, 0.1);
+  --nk-shadow-xl:      0 16px 48px rgba(38, 52, 69, 0.12);
+
+  --nk-accent-blue:    #2e8ecf;
+  --nk-accent-red:     #d65b5c;
+  --nk-accent-purple:  #8f82cc;
+  --nk-accent-teal:    #2fae91;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
 /*----------------------------------------*/
 /*  1.  Theme default CSS
 /*----------------------------------------*/
@@ -127,6 +160,16 @@ padding: 0
 }
 .clear{clear:both}
 body {}
+
+#themeToggle {
+  color: var(--nk-text-primary);
+  background: transparent;
+}
+
+[data-theme="light"] #sidebarCollapse,
+[data-theme="light"] .nk-header-bar .nk-header-icon .nalika-menu-task {
+  color: var(--nk-text-primary) !important;
+}
 
 .mg-tb-30{
 	margin:30px 0px;

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="utf-8">
+    <title layout:fragment="title">Numix - Admin Dashboard</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        (function () {
+            try {
+                var stored = localStorage.getItem('numix-theme');
+                var theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <!-- favicon
+		============================================ -->
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/favicon.ico}">
+    <!-- Google Fonts
+		============================================ -->
+    <link rel="stylesheet" th:href="@{/css/google-fonts/css2.css}">
+    <!-- Bootstrap 5.3.8 CSS
+		============================================ -->
+    <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
+    <!-- Bootstrap Icons 1.13.1
+		============================================ -->
+    <link rel="stylesheet" th:href="@{/bootstrap/bootstrap-icons.min.css}">
+    <!-- nalika Icon CSS
+		============================================ -->
+    <link rel="stylesheet" th:href="@{/css/nalika-icon.css}">
+    <!-- main CSS
+		============================================ -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <!-- style CSS
+		============================================ -->
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <!-- responsive CSS
+		============================================ -->
+    <link rel="stylesheet" th:href="@{/css/responsive.css}">
+
+    <th:block layout:fragment="styles"></th:block>
+</head>
+
+<body>
+
+
+<th:block th:replace="~{layout/sidebar :: sidebar}"></th:block>
+<!-- Start Welcome area -->
+<div class="all-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="logo-pro">
+                    <a th:href="@{/dashboard}"><img class="main-logo" th:src="@{/img/logo/logo.png}" alt=""/></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-advance-area">
+        <th:block th:replace="~{layout/header :: header}"></th:block>
+
+        <th:block layout:fragment="breadcome">
+            <!-- Aquí se insertará el contenido del breadcome de la vista hija -->
+        </th:block>
+    </div>
+
+    <th:block layout:fragment="content">
+        <!-- Aquí se insertará el contenido de la vista hija -->
+    </th:block>
+
+    <th:block th:replace="~{layout/footer :: footer}"></th:block>
+</div>
+<!-- Bootstrap 5.3.8 Bundle (includes Popper)
+    ============================================ -->
+<script th:src="@{/bootstrap/bootstrap.bundle.min.js}"></script>
+
+<!-- main JS
+    ============================================ -->
+<script th:src="@{/js/main.js}"></script>
+
+<th:block layout:fragment="scripts"></th:block>
+
+
+
+</body>
+
+</html>

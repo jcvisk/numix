@@ -13,6 +13,6 @@ public class AuthController {
 
     @GetMapping("/")
     public String root() {
-        return "redirect:/nalika/index.html";
+        return "redirect:/index.html";
     }
 }
