@@ -42,9 +42,46 @@
 </th:block>
 
 <th:block layout:fragment="content">
+    <div class="container-fluid mt-4">
+        <div id="dashboard-page">
+            <div class="card p-4 mb-4">
+                <h4 class="mb-1">{{ cards.length ? (i18n['dashboard.resumen.dia'] || 'Resumen del día') : (i18n['dashboard.titulo'] || 'Dashboard') }}</h4>
+                <p class="mb-0 text-muted" v-if="todayLabel">{{ i18n['dashboard.actualizado'] || 'Actualizado:' }} {{ todayLabel }}</p>
+            </div>
 
+            <div class="alert alert-danger" v-if="errorMessage">{{ errorMessage }}</div>
+            <div class="alert alert-info" v-if="loading">{{ i18n['dashboard.cargando'] || i18n['general.cargando'] || 'Cargando datos...' }}</div>
+
+            <div class="row" v-if="cards.length">
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4" v-for="card in cards" :key="card.title">
+                    <div class="card p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-2">{{ card.title }}</h6>
+                                <h3 class="mb-0">{{ card.value }}</h3>
+                            </div>
+                            <i :class="card.icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-4" v-if="activity.length">
+                <h5 class="mb-3">{{ i18n['dashboard.actividad.reciente'] || 'Actividad reciente' }}</h5>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center"
+                        v-for="item in activity" :key="item.label">
+                        <span>{{ item.label }}</span>
+                        <span class="badge text-bg-primary">{{ item.value }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </th:block>
 
-<!--<th:block layout:fragment="scripts"></th:block>-->
+<th:block layout:fragment="scripts">
+    <script type="module" th:src="@{/js/vue/modules/dashboard/app.js}"></script>
+</th:block>
 </body>
 </html>

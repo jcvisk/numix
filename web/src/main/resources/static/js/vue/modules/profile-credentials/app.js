@@ -1,7 +1,8 @@
 import { createProfileCredentialsService } from './service.js';
+import { loadI18n, translate } from '../../shared/i18n.js';
 
-const rootEl = document.getElementById('credentials-page');
-if (!rootEl) {
+const credentialsEl = document.getElementById('credentials-page');
+if (!credentialsEl) {
     throw new Error('Credentials root element not found');
 }
 
@@ -9,9 +10,10 @@ const { createApp, ref, computed, onMounted } = Vue;
 
 createApp({
     setup() {
-        const service = createProfileCredentialsService(rootEl);
+        const service = createProfileCredentialsService();
         const loading = ref(false);
-        const currentEmail = ref(rootEl.dataset.currentEmail || '');
+        const i18n = ref({});
+        const currentEmail = ref(credentialsEl.dataset.currentEmail || '');
         const errorMessage = ref('');
         const successMessage = ref('');
         const form = ref({
@@ -34,6 +36,12 @@ createApp({
             successMessage.value = '';
         };
 
+        const t = (key, fallback) => translate(i18n.value, key, fallback);
+
+        const loadMessages = async () => {
+            i18n.value = await loadI18n();
+        };
+
         const fetchData = () => {
             loading.value = true;
             return service.fetchData()
@@ -43,7 +51,7 @@ createApp({
                     form.value.confirmEmail = currentEmail.value;
                 })
                 .catch(() => {
-                    errorMessage.value = 'No fue posible cargar tus credenciales';
+                    errorMessage.value = t('credenciales.error.cargar', 'No fue posible cargar tus credenciales');
                 })
                 .finally(() => {
                     loading.value = false;
@@ -62,7 +70,7 @@ createApp({
                 confirmPassword: form.value.confirmPassword
             }).then((result) => {
                 if (!result.success) {
-                    errorMessage.value = result.message || 'No fue posible actualizar tus credenciales';
+                    errorMessage.value = result.message || t('credenciales.error.actualizar', 'No fue posible actualizar tus credenciales');
                     return;
                 }
 
@@ -75,9 +83,16 @@ createApp({
             });
         };
 
-        onMounted(fetchData);
+        onMounted(async () => {
+            try {
+                await loadMessages();
+            } finally {
+                await fetchData();
+            }
+        });
 
         return {
+            i18n,
             loading,
             currentEmail,
             avatarLetter,
@@ -87,4 +102,4 @@ createApp({
             submitCredentials
         };
     }
-}).mount(rootEl);
+}).mount('#app');

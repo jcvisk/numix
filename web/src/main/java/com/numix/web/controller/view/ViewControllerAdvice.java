@@ -1,4 +1,4 @@
-package com.numix.web.controller;
+package com.numix.web.controller.view;
 
 import com.numix.web.security.CurrentUserResolver;
 import java.util.Arrays;
@@ -7,12 +7,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-@ControllerAdvice
-public class CurrentUserModelAdvice {
+@ControllerAdvice(basePackages = "com.numix.web.controller.view")
+public class ViewControllerAdvice {
 
     private final CurrentUserResolver currentUserResolver;
 
-    public CurrentUserModelAdvice(CurrentUserResolver currentUserResolver) {
+    public ViewControllerAdvice(CurrentUserResolver currentUserResolver) {
         this.currentUserResolver = currentUserResolver;
     }
 

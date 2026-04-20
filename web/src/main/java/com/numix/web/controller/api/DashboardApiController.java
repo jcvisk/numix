@@ -1,22 +1,18 @@
-package com.numix.web.controller;
+package com.numix.web.controller.api;
 
+import com.numix.web.controller.DashboardActivity;
+import com.numix.web.controller.DashboardApiSummaryResponse;
+import com.numix.web.controller.DashboardCard;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-public class DashboardController {
-
-    @GetMapping("/dashboard")
-    public String dashboard(){
-        return "dashboard/dashboard";
-    }
+@RestController
+public class DashboardApiController {
 
     @GetMapping("/dashboard/api/summary")
-    @ResponseBody
     public DashboardApiSummaryResponse summary(Authentication authentication) {
         String username = authentication != null ? authentication.getName() : "Usuario";
         return new DashboardApiSummaryResponse(

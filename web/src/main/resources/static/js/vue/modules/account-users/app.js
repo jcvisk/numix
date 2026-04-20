@@ -1,9 +1,5 @@
 import { createAccountUsersService } from './service.js';
-
-const rootEl = document.getElementById('users-page');
-if (!rootEl) {
-    throw new Error('Users root element not found');
-}
+import { loadI18n, translate } from '../../shared/i18n.js';
 
 const { createApp, ref, onMounted } = Vue;
 
@@ -32,21 +28,15 @@ function normalizeRoles(items) {
     return (items || []).map(normalizeRole);
 }
 
-function readInitialMessage(value) {
-    if (!value || value === 'null') {
-        return '';
-    }
-    return value;
-}
-
 createApp({
     setup() {
-        const service = createAccountUsersService(rootEl);
+        const service = createAccountUsersService();
         const loading = ref(false);
+        const i18n = ref({});
         const users = ref([]);
         const roles = ref([]);
-        const errorMessage = ref(readInitialMessage(rootEl.dataset.initialError));
-        const successMessage = ref(readInitialMessage(rootEl.dataset.initialSuccess));
+        const errorMessage = ref('');
+        const successMessage = ref('');
         const createForm = ref({
             fullName: '',
             email: '',
@@ -67,6 +57,12 @@ createApp({
             successMessage.value = '';
         };
 
+        const t = (key, fallback) => translate(i18n.value, key, fallback);
+
+        const loadMessages = async () => {
+            i18n.value = await loadI18n();
+        };
+
         const fetchData = () => {
             loading.value = true;
             return service.fetchData()
@@ -74,7 +70,7 @@ createApp({
                     applyData(data);
                 })
                 .catch(() => {
-                    errorMessage.value = 'No fue posible cargar los usuarios';
+                    errorMessage.value = t('usuarios.error.cargar', 'No fue posible cargar los usuarios');
                 })
                 .finally(() => {
                     loading.value = false;
@@ -92,7 +88,7 @@ createApp({
                 roleCode: createForm.value.roleCode
             }).then((result) => {
                 if (!result.success) {
-                    errorMessage.value = result.message || 'No fue posible crear el usuario';
+                    errorMessage.value = result.message || t('usuarios.error.crear', 'No fue posible crear el usuario');
                     if (result.data) {
                         applyData(result.data);
                     }
@@ -121,7 +117,7 @@ createApp({
                 enabled: user.enabledString === 'true'
             }).then((result) => {
                 if (!result.success) {
-                    errorMessage.value = result.message || 'No fue posible actualizar el usuario';
+                    errorMessage.value = result.message || t('usuarios.error.actualizar', 'No fue posible actualizar el usuario');
                     if (result.data) {
                         applyData(result.data);
                     }
@@ -137,9 +133,16 @@ createApp({
             });
         };
 
-        onMounted(fetchData);
+        onMounted(async () => {
+            try {
+                await loadMessages();
+            } finally {
+                await fetchData();
+            }
+        });
 
         return {
+            i18n,
             loading,
             users,
             roles,
@@ -150,4 +153,4 @@ createApp({
             submitUpdate
         };
     }
-}).mount(rootEl);
+}).mount('#app');

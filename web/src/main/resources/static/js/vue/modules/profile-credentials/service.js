@@ -1,44 +1,18 @@
-export function createProfileCredentialsService(rootEl) {
-    function get(url) {
-        return axios.get(url, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                Accept: 'application/json'
-            }
-        });
-    }
+import { axiosGetJson, axiosPostJson, resolveApiErrorMessage } from '../../shared/http.js';
 
-    function post(url, payload) {
-        const headers = {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-        };
+const CREDENTIALS_DATA_ENDPOINT = '/profile/credentials/api/data';
+const CHANGE_CREDENTIALS_ENDPOINT = '/profile/credentials/api/change';
 
-        if (rootEl.dataset.csrfHeader && rootEl.dataset.csrfToken) {
-            headers[rootEl.dataset.csrfHeader] = rootEl.dataset.csrfToken;
-        }
-
-        return axios.post(url, payload, { headers });
-    }
-
-    function resolveErrorMessage(error, fallback) {
-        if (error && error.response && error.response.data && error.response.data.message) {
-            return error.response.data.message;
-        }
-        return fallback;
-    }
-
+export function createProfileCredentialsService() {
     return {
         fetchData() {
-            return get(rootEl.dataset.fetchUrl).then((response) => response.data);
+            return axiosGetJson(CREDENTIALS_DATA_ENDPOINT);
         },
         changeCredentials(payload) {
-            return post(rootEl.dataset.changeUrl, payload)
-                .then((response) => response.data)
+            return axiosPostJson(CHANGE_CREDENTIALS_ENDPOINT, payload)
                 .catch((error) => ({
                     success: false,
-                    message: resolveErrorMessage(error, 'No fue posible actualizar tus credenciales')
+                    message: resolveApiErrorMessage(error)
                 }));
         }
     };

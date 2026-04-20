@@ -1,20 +1,23 @@
 import { createDashboardService } from './service.js';
-
-const rootEl = document.getElementById('dashboard-page');
-if (!rootEl) {
-    throw new Error('Dashboard root element not found');
-}
+import { loadI18n, translate } from '../../shared/i18n.js';
 
 const { createApp, ref, computed, onMounted } = Vue;
 
 createApp({
     setup() {
-        const service = createDashboardService(rootEl);
+        const service = createDashboardService();
         const loading = ref(false);
+        const i18n = ref({});
         const errorMessage = ref('');
         const generatedAt = ref('');
         const cards = ref([]);
         const activity = ref([]);
+
+        const t = (key, fallback) => translate(i18n.value, key, fallback);
+
+        const loadMessages = async () => {
+            i18n.value = await loadI18n();
+        };
 
         const todayLabel = computed(() => {
             if (!generatedAt.value) {
@@ -43,16 +46,23 @@ createApp({
                     activity.value = summary.activity || [];
                 })
                 .catch(() => {
-                    errorMessage.value = 'No fue posible cargar el dashboard';
+                    errorMessage.value = t('dashboard.error.cargar', 'No fue posible cargar el dashboard');
                 })
                 .finally(() => {
                     loading.value = false;
                 });
         };
 
-        onMounted(fetchSummary);
+        onMounted(async () => {
+            try {
+                await loadMessages();
+            } finally {
+                await fetchSummary();
+            }
+        });
 
         return {
+            i18n,
             loading,
             errorMessage,
             cards,
@@ -60,4 +70,4 @@ createApp({
             todayLabel
         };
     }
-}).mount(rootEl);
+}).mount('#app');

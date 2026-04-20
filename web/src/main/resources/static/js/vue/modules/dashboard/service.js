@@ -1,12 +1,11 @@
-export function createDashboardService(rootEl) {
+import { axiosGetJson } from '../../shared/http.js';
+
+const DASHBOARD_SUMMARY_ENDPOINT = '/dashboard/api/summary';
+
+export function createDashboardService() {
     return {
         fetchSummary() {
-            return axios.get(rootEl.dataset.fetchUrl, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    Accept: 'application/json'
-                }
-            }).then((response) => response.data);
+            return axiosGetJson(DASHBOARD_SUMMARY_ENDPOINT);
         }
     };
 }

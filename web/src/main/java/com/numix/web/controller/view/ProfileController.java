@@ -1,4 +1,4 @@
-package com.numix.web.controller;
+package com.numix.web.controller.view;
 
 import com.numix.core.auth.entity.AppUser;
 import com.numix.core.auth.service.AppUserService;
@@ -15,18 +15,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class ProfileController {
+public class ProfileController extends BaseViewController {
 
     private final AppUserService appUserService;
     private final CurrentUserResolver currentUserResolver;
     private final SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     public ProfileController(AppUserService appUserService, CurrentUserResolver currentUserResolver) {
+        super("credenciales");
         this.appUserService = appUserService;
         this.currentUserResolver = currentUserResolver;
     }
@@ -83,48 +82,6 @@ public class ProfileController {
         );
         logoutHandler.logout(request, response, authentication);
         return "redirect:/login";
-    }
-
-    @GetMapping("/profile/credentials/api/data")
-    @ResponseBody
-    public CredentialsApiData credentialsData(Authentication authentication) {
-        AppUser currentUser = currentUserResolver.resolveOrFail(authentication);
-        return new CredentialsApiData(currentUser.getEmail());
-    }
-
-    @PostMapping("/profile/credentials/api/change")
-    @ResponseBody
-    public CredentialsApiActionResponse changeCredentialsApi(
-        Authentication authentication,
-        HttpServletRequest request,
-        HttpServletResponse response,
-        @RequestBody CredentialsForm form
-    ) {
-        AppUser currentUser = currentUserResolver.resolveOrFail(authentication);
-        if (!sameValue(form.getNewEmail(), form.getConfirmEmail())) {
-            return new CredentialsApiActionResponse(false, "Los correos no coinciden", null);
-        }
-        if (!sameValue(form.getNewPassword(), form.getConfirmPassword())) {
-            return new CredentialsApiActionResponse(false, "Las contraseñas no coinciden", null);
-        }
-
-        try {
-            appUserService.changeCredentials(new ChangeCredentialsRequest(
-                currentUser.getId(),
-                form.getCurrentPassword(),
-                form.getNewEmail(),
-                form.getNewPassword()
-            ));
-        } catch (AuthBusinessException ex) {
-            return new CredentialsApiActionResponse(false, ex.getMessage(), null);
-        }
-
-        logoutHandler.logout(request, response, authentication);
-        return new CredentialsApiActionResponse(
-            true,
-            "Credenciales actualizadas. Inicia sesión nuevamente con tu nuevo correo.",
-            "/login"
-        );
     }
 
     private boolean sameValue(String left, String right) {

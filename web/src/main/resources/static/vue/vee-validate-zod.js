@@ -1,0 +1,13 @@
+/**
+ * Bundled by jsDelivr using Rollup v2.79.2 and Terser v5.39.0.
+ * Original file: /npm/@vee-validate/zod@4.15.1/dist/vee-validate-zod.mjs
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+import{ZodObject as e,ZodDefault as t,ZodFirstPartyTypeKind as r}from"/npm/zod@3.25.56/+esm";import{isNotNestedPath as n,cleanupNonNestedPath as o}from"/npm/vee-validate@4.15.1/+esm";
+/**
+  * vee-validate v4.15.1
+  * (c) 2025 Abdelrahman Awad
+  * @license MIT
+  */const u=e=>null!==e&&!!e&&"object"==typeof e&&!Array.isArray(e);function i(e){return Number(e)>=0}function s(e){if(!function(e){return"object"==typeof e&&null!==e}(e)||"[object Object]"!==function(e){return null==e?void 0===e?"[object Undefined]":"[object Null]":Object.prototype.toString.call(e)}(e))return!1;if(null===Object.getPrototypeOf(e))return!0;let t=e;for(;null!==Object.getPrototypeOf(t);)t=Object.getPrototypeOf(t);return Object.getPrototypeOf(e)===t}function c(e,t){return Object.keys(t).forEach((r=>{if(s(t[r])&&s(e[r]))return e[r]||(e[r]={}),void c(e[r],t[r]);e[r]=t[r]})),e}function f(e,t){return{__type:"VVTypedSchema",async parse(r){const n=await e.safeParseAsync(r,t);if(n.success)return{value:n.data,errors:[]};const o={};return l(n.error.issues,o),{errors:Object.values(o)}},cast(t){try{return e.parse(t)}catch(r){const n=a(e);return u(n)&&u(t)?c(n,t):t}},describe(t){try{if(!t)return{required:!e.isOptional(),exists:!0};const r=function(e,t){if(!j(t))return null;if(n(e))return t.shape[o(e)];const r=(e||"").split(/\.|\[(\d+)\]/).filter(Boolean);let u=t;for(let e=0;e<=r.length;e++){const t=r[e];if(!t||!u)return u;j(u)?u=u.shape[t]||null:i(t)&&b(u)&&(u=u._def.type)}return null}(t,e);return r?{required:!r.isOptional(),exists:!0}:{required:!1,exists:!1}}catch(e){return{required:!1,exists:!1}}}}}function l(e,t){e.forEach((e=>{const r=function(e){const t=e.split(".");if(!t.length)return"";let r=String(t[0]);for(let e=1;e<t.length;e++)i(t[e])?r+=`[${t[e]}]`:r+=`.${t[e]}`;return r}(e.path.join("."));("invalid_union"!==e.code||(l(e.unionErrors.flatMap((e=>e.issues)),t),r))&&(t[r]||(t[r]={errors:[],path:r}),t[r].errors.push(e.message))}))}function a(r){if(r instanceof e)return Object.fromEntries(Object.entries(r.shape).map((([r,n])=>n instanceof t?[r,n._def.defaultValue()]:n instanceof e?[r,a(n)]:[r,void 0])))}const p=f,d=f;function y(e){return e._def.typeName}function b(e){return y(e)===r.ZodArray}function j(e){return y(e)===r.ZodObject}export{p as toFieldValidator,d as toFormValidator,f as toTypedSchema};export default null;
+//# sourceMappingURL=/sm/2ca3dc0275345996be8443662791afeb1d2e7629c25d8db89dc1e65dc65282b0.map

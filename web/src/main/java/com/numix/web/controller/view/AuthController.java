@@ -1,4 +1,4 @@
-package com.numix.web.controller;
+package com.numix.web.controller.view;
 
 import com.numix.core.auth.service.AppUserService;
 import com.numix.core.auth.service.exception.AuthBusinessException;
@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class AuthController {
+public class AuthController extends BaseViewController {
 
     private final AppUserService appUserService;
 
     public AuthController(AppUserService appUserService) {
+        super("auth");
         this.appUserService = appUserService;
     }
 
