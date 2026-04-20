@@ -13,20 +13,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "app_role")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Role {
+@Table(name = "app_status")
+public class AppStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "code", nullable = false, unique = true, length = 50)
     @Enumerated(EnumType.STRING)
-    private RoleCode code;
+    @Column(name = "code", nullable = false, unique = true, length = 50)
+    private StatusCode code;
 
-    @Column(name = "description", nullable = false, length = 255)
-    private String description;
+    @Column(name = "name", nullable = false, length = 120)
+    private String name;
 }

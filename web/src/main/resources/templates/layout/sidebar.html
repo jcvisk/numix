@@ -6,8 +6,11 @@
         </div>
         <div class="nalika-profile">
             <div class="profile-dtl">
-                <a href="#"><img src="https://avatars.githubusercontent.com/u/3451398?s=200&v=4" alt="Aigars Silkalns" /></a>
-                <h2>Aigars <span class="min-dtn">Silkalns</span></h2>
+                <a href="#"><img src="https://avatars.githubusercontent.com/u/3451398?s=200&v=4" th:alt="${#strings.isEmpty(currentUserFullName) ? 'Usuario' : currentUserFullName}" alt="Usuario" /></a>
+                <h2>
+                    <th:block th:text="${currentUserNamePart1}">Usuario</th:block>
+                    <span class="min-dtn" th:if="${!#strings.isEmpty(currentUserNamePart2)}" th:text="${currentUserNamePart2}"></span>
+                </h2>
             </div>
             <div class="profile-social-dtl">
                 <ul class="dtl-social">
@@ -115,8 +118,10 @@
                     <li id="removable">
                         <a class="has-arrow" href="#" aria-expanded="false"><i class="bi big-icon bi-files icon-wrap"></i> <span class="mini-click-non">Pages</span></a>
                         <ul class="submenu-angle" aria-expanded="false">
-                            <li><a title="Login" th:href="@{/login.html}"><span class="mini-sub-pro">Login</span></a></li>
-                            <li><a title="Register" th:href="@{/register.html}"><span class="mini-sub-pro">Register</span></a></li>
+                            <li><a title="Login" th:href="@{/login}"><span class="mini-sub-pro">Login</span></a></li>
+                            <li><a title="Register" th:href="@{/register}"><span class="mini-sub-pro">Registro público</span></a></li>
+                            <li><a title="Usuarios" th:href="@{/account/users}"><span class="mini-sub-pro">Usuarios de Cuenta</span></a></li>
+                            <li><a title="Perfil" th:href="@{/profile/credentials}"><span class="mini-sub-pro">Mi Perfil</span></a></li>
                             <li><a title="Lock" th:href="@{/lock.html}"><span class="mini-sub-pro">Lock</span></a></li>
                             <li><a title="Password Recovery" th:href="@{/password-recovery.html}"><span class="mini-sub-pro">Password Recovery</span></a></li>
                         </ul>

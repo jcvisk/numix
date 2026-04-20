@@ -1514,6 +1514,18 @@ ul.tab-custon-design, ul.tab-review-design {
 	font-size:14px;
 	margin:0;
 }
+
+/* Improve Bootstrap muted text contrast in dark mode */
+html[data-theme="dark"] .text-muted {
+  color: #b6c4d8 !important;
+}
+
+html[data-theme="dark"] .text-muted p,
+html[data-theme="dark"] .text-muted small,
+html[data-theme="dark"] small.text-muted {
+  color: #b6c4d8 !important;
+}
+
 .txt-primary p{
 	font-size: 16px;
     font-weight: 700;
