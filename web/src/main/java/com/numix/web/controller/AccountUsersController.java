@@ -16,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -87,6 +89,61 @@ public class AccountUsersController {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         }
         return "redirect:/account/users";
+    }
+
+    @GetMapping("/account/users/api/data")
+    @ResponseBody
+    public UsersPageApiResponse usersPageData(Authentication authentication) {
+        AppUser currentUser = currentUserResolver.resolveOrFail(authentication);
+        return buildUsersPageData(currentUser);
+    }
+
+    @PostMapping("/account/users/api/create")
+    @ResponseBody
+    public ApiActionResponse createUserApi(
+        Authentication authentication,
+        @RequestBody CreateUserForm createForm
+    ) {
+        AppUser currentUser = currentUserResolver.resolveOrFail(authentication);
+        try {
+            appUserService.createAccountUser(new CreateAccountUserRequest(
+                currentUser.getId(),
+                createForm.getEmail(),
+                createForm.getPassword(),
+                createForm.getFullName(),
+                createForm.getRoleCode()
+            ));
+            return new ApiActionResponse(true, "Usuario creado correctamente", buildUsersPageData(currentUser));
+        } catch (AuthBusinessException ex) {
+            return new ApiActionResponse(false, ex.getMessage(), buildUsersPageData(currentUser));
+        }
+    }
+
+    @PostMapping("/account/users/api/update")
+    @ResponseBody
+    public ApiActionResponse updateUserApi(
+        Authentication authentication,
+        @RequestBody UpdateUserForm updateForm
+    ) {
+        AppUser currentUser = currentUserResolver.resolveOrFail(authentication);
+        try {
+            appUserService.updateAccountUser(new UpdateAccountUserRequest(
+                currentUser.getId(),
+                updateForm.getTargetUserId(),
+                updateForm.getRoleCode(),
+                updateForm.getEnabled()
+            ));
+            return new ApiActionResponse(true, "Usuario actualizado correctamente", buildUsersPageData(currentUser));
+        } catch (AuthBusinessException ex) {
+            return new ApiActionResponse(false, ex.getMessage(), buildUsersPageData(currentUser));
+        }
+    }
+
+    private UsersPageApiResponse buildUsersPageData(AppUser currentUser) {
+        return new UsersPageApiResponse(
+            appUserService.listAccountUsers(currentUser.getId()),
+            manageableAssignableRoles()
+        );
     }
 
     private List<RoleCode> manageableAssignableRoles() {

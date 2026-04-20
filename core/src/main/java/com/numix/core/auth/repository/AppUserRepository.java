@@ -8,14 +8,14 @@ import org.springframework.data.jpa.repository.EntityGraph;
 
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
-    @EntityGraph(attributePaths = {"roles", "account"})
+    @EntityGraph(attributePaths = {"roles", "account", "account.status"})
     Optional<AppUser> findByEmailIgnoreCase(String email);
 
     boolean existsByEmailIgnoreCase(String email);
 
-    @EntityGraph(attributePaths = {"roles", "account"})
+    @EntityGraph(attributePaths = {"roles", "account", "account.status"})
     List<AppUser> findAllByAccountIdOrderByIdAsc(Long accountId);
 
-    @EntityGraph(attributePaths = {"roles", "account"})
+    @EntityGraph(attributePaths = {"roles", "account", "account.status"})
     Optional<AppUser> findByIdAndAccountId(Long id, Long accountId);
 }
