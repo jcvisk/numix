@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es" layout:decorate="~{layout/base}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title layout:fragment="title">Empresas de Cuenta</title>
+</head>
+<body>
+<th:block layout:fragment="breadcome">
+    <div class="breadcome-area">
+        <div class="container-fluid">
+            <div class="breadcome-list">
+                <h2 class="mb-0">Empresas de la cuenta</h2>
+                <p class="mb-0">CRUD de empresas y asignación a usuarios ADMIN/AUX</p>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="container-fluid mt-4">
+        <div id="app">
+            <div class="numix-message numix-message--error" v-if="errorMessage">{{ errorMessage }}</div>
+            <div class="numix-message numix-message--success" v-if="successMessage">{{ successMessage }}</div>
+            <div class="numix-message numix-message--info" v-if="loading">{{ i18n['general.cargando'] || 'Procesando...' }}</div>
+
+            <div class="card p-4 mb-4">
+                <h5>Crear empresa</h5>
+                <form class="row g-3" @submit.prevent="submitCreate" novalidate>
+                    <div class="col-md-4">
+                        <label class="form-label" for="name">Nombre comercial</label>
+                        <input :class="['form-control', { 'is-invalid': createFormErrors.name }]"
+                               id="name" type="text" v-model.trim="createForm.name" required>
+                        <div class="invalid-feedback" v-if="createFormErrors.name">{{ createFormErrors.name }}</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="legalName">Razón social</label>
+                        <input :class="['form-control', { 'is-invalid': createFormErrors.legalName }]"
+                               id="legalName" type="text" v-model.trim="createForm.legalName" required>
+                        <div class="invalid-feedback" v-if="createFormErrors.legalName">{{ createFormErrors.legalName }}</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="taxId">RFC / Tax ID</label>
+                        <input :class="['form-control', { 'is-invalid': createFormErrors.taxId }]"
+                               id="taxId" type="text" v-model.trim="createForm.taxId" required>
+                        <div class="invalid-feedback" v-if="createFormErrors.taxId">{{ createFormErrors.taxId }}</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="fiscalRegime">Régimen fiscal</label>
+                        <input :class="['form-control', { 'is-invalid': createFormErrors.fiscalRegime }]"
+                               id="fiscalRegime" type="text" v-model.trim="createForm.fiscalRegime" required>
+                        <div class="invalid-feedback" v-if="createFormErrors.fiscalRegime">{{ createFormErrors.fiscalRegime }}</div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="taxZipCode">CP fiscal</label>
+                        <input class="form-control" id="taxZipCode" type="text" v-model.trim="createForm.taxZipCode">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="baseCurrencyId">Moneda base</label>
+                        <select :class="['form-select', { 'is-invalid': createFormErrors.baseCurrencyId }]"
+                                id="baseCurrencyId" v-model.number="createForm.baseCurrencyId" required>
+                            <option :value="null" disabled>Selecciona moneda</option>
+                            <option v-for="currency in currencies" :key="currency.id" :value="currency.id">
+                                {{ currency.code }} - {{ currency.name }}
+                            </option>
+                        </select>
+                        <div class="invalid-feedback" v-if="createFormErrors.baseCurrencyId">{{ createFormErrors.baseCurrencyId }}</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="email">Correo</label>
+                        <input class="form-control" id="email" type="email" v-model.trim="createForm.email">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="phone">Teléfono</label>
+                        <input class="form-control" id="phone" type="text" v-model.trim="createForm.phone">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label" for="address">Dirección</label>
+                        <input class="form-control" id="address" type="text" v-model.trim="createForm.address">
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-primary" type="submit" :disabled="loading">Crear empresa</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card p-4 mb-4">
+                <h5>Asignar empresas a usuario</h5>
+                <form class="row g-3" @submit.prevent="submitAssignment" novalidate>
+                    <div class="col-md-4">
+                        <label class="form-label" for="targetUserId">Usuario ADMIN/AUX</label>
+                        <select class="form-select" id="targetUserId" v-model.number="assignmentForm.targetUserId" required>
+                            <option :value="null" disabled>Selecciona usuario</option>
+                            <option v-for="user in assignableUsers" :key="user.id" :value="user.id">
+                                {{ user.fullName }} ({{ user.roleCode }})
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label">Empresas</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <label class="form-check" v-for="company in companies" :key="company.id">
+                                <input class="form-check-input" type="checkbox"
+                                       :value="company.id" v-model="assignmentForm.companyIds">
+                                <span class="form-check-label">{{ company.name }} ({{ company.taxId }})</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-outline-primary" type="submit" :disabled="loading">Guardar asignación</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card p-4">
+                <h5>Empresas actuales</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Razón social</th>
+                            <th>RFC</th>
+                            <th>Régimen</th>
+                            <th>Moneda</th>
+                            <th>Estatus</th>
+                            <th>Acción</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="company in companies" :key="company.id">
+                            <td>{{ company.id }}</td>
+                            <td><input class="form-control form-control-sm" type="text" v-model.trim="company.name"></td>
+                            <td><input class="form-control form-control-sm" type="text" v-model.trim="company.legalName"></td>
+                            <td><input class="form-control form-control-sm" type="text" v-model.trim="company.taxId"></td>
+                            <td><input class="form-control form-control-sm" type="text" v-model.trim="company.fiscalRegime"></td>
+                            <td>
+                                <select class="form-select form-select-sm" v-model.number="company.baseCurrencyId">
+                                    <option v-for="currency in currencies" :key="currency.id" :value="currency.id">
+                                        {{ currency.code }}
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-select form-select-sm" v-model="company.status">
+                                    <option value="ACTIVE">ACTIVE</option>
+                                    <option value="INACTIVE">INACTIVE</option>
+                                </select>
+                            </td>
+                            <td>
+                                <form class="d-flex gap-2 align-items-center" @submit.prevent="submitUpdate(company)" novalidate>
+                                    <button class="btn btn-sm btn-outline-primary" type="submit" :disabled="loading">Guardar</button>
+                                    <button class="btn btn-sm btn-outline-danger" type="button" :disabled="loading"
+                                            @click="submitDelete(company.id)">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="scripts">
+    <script type="module" th:src="@{/js/vue/modules/account-companies/app.js}"></script>
+</th:block>
+</body>
+</html>

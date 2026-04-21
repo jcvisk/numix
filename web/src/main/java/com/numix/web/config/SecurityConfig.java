@@ -45,6 +45,7 @@ public class SecurityConfig {
                     "/error"
                 ).permitAll()
                 .requestMatchers("/account/users/**").hasAnyAuthority("OWNER", "ADMIN", "SUPER_ADMIN")
+                .requestMatchers("/account/companies/**").hasAuthority("OWNER")
                 .requestMatchers("/dashboard/**", "/profile/**").authenticated()
                 .anyRequest().authenticated()
             )

@@ -59,7 +59,8 @@ public class AccountUsersController extends BaseViewController {
                 createForm.getEmail(),
                 createForm.getPassword(),
                 createForm.getFullName(),
-                createForm.getRoleCode()
+                createForm.getRoleCode(),
+                createForm.getCompanyIds()
             ));
             redirectAttributes.addFlashAttribute("successMessage", "Usuario creado correctamente");
         } catch (AuthBusinessException ex) {
@@ -81,7 +82,8 @@ public class AccountUsersController extends BaseViewController {
                 currentUser.getId(),
                 updateForm.getTargetUserId(),
                 updateForm.getRoleCode(),
-                updateForm.getEnabled()
+                updateForm.getEnabled(),
+                updateForm.getCompanyIds()
             ));
             redirectAttributes.addFlashAttribute("successMessage", "Usuario actualizado correctamente");
         } catch (AuthBusinessException ex) {

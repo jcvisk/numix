@@ -16,6 +16,10 @@ import com.numix.core.auth.service.model.CreateAccountUserRequest;
 import com.numix.core.auth.service.model.PublicRegistrationRequest;
 import com.numix.core.auth.service.model.UpdateAccountUserRequest;
 import com.numix.core.auth.service.model.UserSummary;
+import com.numix.core.company.entity.Company;
+import com.numix.core.company.entity.UserCompany;
+import com.numix.core.company.repository.CompanyRepository;
+import com.numix.core.company.repository.UserCompanyRepository;
 import java.time.OffsetDateTime;
 import java.util.LinkedHashSet;
 import java.util.EnumSet;
@@ -37,6 +41,8 @@ public class AppUserService {
     private final AccountRepository accountRepository;
     private final AppStatusRepository appStatusRepository;
     private final RoleRepository roleRepository;
+    private final CompanyRepository companyRepository;
+    private final UserCompanyRepository userCompanyRepository;
     private final PasswordEncoder passwordEncoder;
 
     public AppUserService(
@@ -44,12 +50,16 @@ public class AppUserService {
         AccountRepository accountRepository,
         AppStatusRepository appStatusRepository,
         RoleRepository roleRepository,
+        CompanyRepository companyRepository,
+        UserCompanyRepository userCompanyRepository,
         PasswordEncoder passwordEncoder
     ) {
         this.appUserRepository = appUserRepository;
         this.accountRepository = accountRepository;
         this.appStatusRepository = appStatusRepository;
         this.roleRepository = roleRepository;
+        this.companyRepository = companyRepository;
+        this.userCompanyRepository = userCompanyRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -120,7 +130,9 @@ public class AppUserService {
         user.setEnabled(true);
         user.setAccount(actor.getAccount());
         user.setRoles(singleRoleSet(targetRoleCode));
-        return appUserRepository.save(user);
+        AppUser persisted = appUserRepository.save(user);
+        upsertCompanyAssignments(actor, persisted, targetRoleCode, request.companyIds());
+        return persisted;
     }
 
     @Transactional
@@ -148,7 +160,10 @@ public class AppUserService {
             target.setEnabled(request.enabled());
         }
 
-        return appUserRepository.save(target);
+        AppUser persisted = appUserRepository.save(target);
+        RoleCode targetRole = request.roleCode() != null ? request.roleCode() : primaryRole(target);
+        upsertCompanyAssignments(actor, persisted, targetRole, request.companyIds());
+        return persisted;
     }
 
     @Transactional
@@ -270,6 +285,37 @@ public class AppUserService {
             throw new AuthBusinessException("Rol inválido para operación de cuenta");
         }
         return roleCode;
+    }
+
+    private void upsertCompanyAssignments(AppUser actor, AppUser target, RoleCode targetRole, Set<Long> companyIds) {
+        if (companyIds == null) {
+            return;
+        }
+        if (primaryRole(actor) != RoleCode.OWNER) {
+            throw new AuthBusinessException("Solo OWNER puede asignar empresas a usuarios");
+        }
+        if (targetRole != RoleCode.ADMIN && targetRole != RoleCode.AUX) {
+            throw new AuthBusinessException("Solo se pueden asignar empresas a usuarios ADMIN o AUX");
+        }
+        if (companyIds.isEmpty()) {
+            throw new AuthBusinessException("Debes asignar al menos una empresa");
+        }
+
+        Long accountId = requireAccountId(actor);
+        List<Company> companies = companyRepository.findAllById(companyIds)
+            .stream()
+            .filter(company -> company.getAccount().getId().equals(accountId))
+            .toList();
+
+        if (companies.size() != companyIds.size()) {
+            throw new AuthBusinessException("Una o más empresas no pertenecen a la cuenta");
+        }
+
+        userCompanyRepository.deleteAllByUser_Id(target.getId());
+        List<UserCompany> assignments = companies.stream()
+            .map(company -> new UserCompany(target, company, actor))
+            .toList();
+        userCompanyRepository.saveAll(assignments);
     }
 
     private UserSummary toSummary(AppUser user) {

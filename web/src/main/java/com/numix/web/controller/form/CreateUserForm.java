@@ -1,12 +1,14 @@
 package com.numix.web.controller.form;
 
 import com.numix.core.auth.entity.RoleCode;
+import java.util.Set;
 
 public class CreateUserForm {
     private String fullName;
     private String email;
     private String password;
     private RoleCode roleCode;
+    private Set<Long> companyIds;
 
     public String getFullName() {
         return fullName;
@@ -38,5 +40,13 @@ public class CreateUserForm {
 
     public void setRoleCode(RoleCode roleCode) {
         this.roleCode = roleCode;
+    }
+
+    public Set<Long> getCompanyIds() {
+        return companyIds;
+    }
+
+    public void setCompanyIds(Set<Long> companyIds) {
+        this.companyIds = companyIds;
     }
 }

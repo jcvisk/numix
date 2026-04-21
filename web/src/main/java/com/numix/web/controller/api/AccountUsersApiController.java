@@ -47,7 +47,8 @@ public class AccountUsersApiController {
                 createForm.getEmail(),
                 createForm.getPassword(),
                 createForm.getFullName(),
-                createForm.getRoleCode()
+                createForm.getRoleCode(),
+                createForm.getCompanyIds()
             ));
             return new ApiActionResponse(true, "Usuario creado correctamente", buildUsersPageData(currentUser));
         } catch (AuthBusinessException ex) {
@@ -66,7 +67,8 @@ public class AccountUsersApiController {
                 currentUser.getId(),
                 updateForm.getTargetUserId(),
                 updateForm.getRoleCode(),
-                updateForm.getEnabled()
+                updateForm.getEnabled(),
+                updateForm.getCompanyIds()
             ));
             return new ApiActionResponse(true, "Usuario actualizado correctamente", buildUsersPageData(currentUser));
         } catch (AuthBusinessException ex) {
