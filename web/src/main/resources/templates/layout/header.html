@@ -113,6 +113,34 @@
                     </div>
                 </div>
 
+                <div class="dropdown">
+                    <button type="button"
+                            class="nk-header-icon nk-language-toggle btn border-0 p-0"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            aria-label="Cambiar idioma"
+                            title="Cambiar idioma">
+                        <i class="bi bi-translate"></i>
+                        <span class="nk-language-label" th:text="${currentLanguage == 'en' ? 'EN' : 'ES'}">ES</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end nk-language-menu">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center justify-content-between"
+                               th:href="${languageSwitchEsUrl}">
+                                <span>Español</span>
+                                <i class="bi bi-check2 ms-3" th:if="${currentLanguage == 'es'}"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center justify-content-between"
+                               th:href="${languageSwitchEnUrl}">
+                                <span>English</span>
+                                <i class="bi bi-check2 ms-3" th:if="${currentLanguage == 'en'}"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
                 <button type="button" id="themeToggle" class="nk-header-icon btn border-0 p-0"
                         aria-label="Cambiar tema" title="Cambiar tema">
                     <i class="bi bi-moon-stars"></i>

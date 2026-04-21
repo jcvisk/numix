@@ -7,6 +7,11 @@
 
 var THEME_STORAGE_KEY = 'numix-theme';
 
+function getUiLanguage() {
+  var lang = (document.documentElement.getAttribute('lang') || 'es').toLowerCase();
+  return lang.indexOf('en') === 0 ? 'en' : 'es';
+}
+
 function getStoredTheme() {
   try {
     return localStorage.getItem(THEME_STORAGE_KEY);
@@ -41,7 +46,10 @@ function applyTheme(theme, persist) {
     icon.className = resolved === 'light' ? 'bi bi-moon-stars' : 'bi bi-sun';
   }
 
-  var label = resolved === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro';
+  var isEnglish = getUiLanguage() === 'en';
+  var label = resolved === 'light'
+    ? (isEnglish ? 'Switch to dark mode' : 'Cambiar a modo oscuro')
+    : (isEnglish ? 'Switch to light mode' : 'Cambiar a modo claro');
   toggleButton.setAttribute('title', label);
   toggleButton.setAttribute('aria-label', label);
 }

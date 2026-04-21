@@ -78,3 +78,9 @@ BEGIN
 END $$;
 
 ALTER TABLE account DROP COLUMN IF EXISTS status;
+
+
+ALTER TABLE account
+    ADD CONSTRAINT account_app_status_fkey
+        FOREIGN KEY (status_id)
+            REFERENCES app_status (id);
