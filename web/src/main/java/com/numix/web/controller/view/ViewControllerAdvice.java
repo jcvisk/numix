@@ -1,7 +1,9 @@
 package com.numix.web.controller.view;
 
 import com.numix.web.security.CurrentUserResolver;
+import com.numix.web.security.SessionCompanyContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.Locale;
 import java.util.Arrays;
 import org.springframework.security.core.Authentication;
@@ -14,9 +16,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ViewControllerAdvice {
 
     private final CurrentUserResolver currentUserResolver;
+    private final SessionCompanyContext sessionCompanyContext;
 
-    public ViewControllerAdvice(CurrentUserResolver currentUserResolver) {
+    public ViewControllerAdvice(CurrentUserResolver currentUserResolver, SessionCompanyContext sessionCompanyContext) {
         this.currentUserResolver = currentUserResolver;
+        this.sessionCompanyContext = sessionCompanyContext;
     }
 
     @ModelAttribute
@@ -56,6 +60,31 @@ public class ViewControllerAdvice {
         model.addAttribute("currentLanguage", normalizedCurrentLanguage);
         model.addAttribute("languageSwitchEsUrl", buildLanguageSwitchUrl(request, "es"));
         model.addAttribute("languageSwitchEnUrl", buildLanguageSwitchUrl(request, "en"));
+    }
+
+    @ModelAttribute
+    public void activeCompany(Authentication authentication, HttpSession session, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            model.addAttribute("headerCompanies", java.util.List.of());
+            model.addAttribute("activeCompanyName", "Sin empresa");
+            model.addAttribute("activeCompanyId", null);
+            model.addAttribute("hasActiveCompany", false);
+            return;
+        }
+
+        try {
+            var currentUser = currentUserResolver.resolveOrFail(authentication);
+            var selection = sessionCompanyContext.synchronize(currentUser, session);
+            model.addAttribute("headerCompanies", selection.companies());
+            model.addAttribute("activeCompanyName", selection.activeCompanyName() == null ? "Sin empresa" : selection.activeCompanyName());
+            model.addAttribute("activeCompanyId", selection.activeCompanyId());
+            model.addAttribute("hasActiveCompany", selection.activeCompanyId() != null);
+        } catch (RuntimeException ex) {
+            model.addAttribute("headerCompanies", java.util.List.of());
+            model.addAttribute("activeCompanyName", "Sin empresa");
+            model.addAttribute("activeCompanyId", null);
+            model.addAttribute("hasActiveCompany", false);
+        }
     }
 
     private String buildLanguageSwitchUrl(HttpServletRequest request, String languageTag) {
