@@ -1,5 +1,6 @@
 import { createAccountUsersService } from './service.js';
 import { loadI18n, translate } from '../../shared/i18n.js';
+import { validateWithSchema, z } from '../../shared/validation.js';
 
 const { createApp, ref, onMounted } = Vue;
 
@@ -37,6 +38,7 @@ createApp({
         const roles = ref([]);
         const errorMessage = ref('');
         const successMessage = ref('');
+        const createFormErrors = ref({});
         const createForm = ref({
             fullName: '',
             email: '',
@@ -57,10 +59,58 @@ createApp({
             successMessage.value = '';
         };
 
+        const clearCreateFormErrors = () => {
+            createFormErrors.value = {};
+        };
+
         const t = (key, fallback) => translate(i18n.value, key, fallback);
 
         const loadMessages = async () => {
             i18n.value = await loadI18n();
+        };
+
+        const createFormSchema = () => z.object({
+            fullName: z.string().trim().min(
+                1,
+                t('usuarios.validation.fullName.required', 'El nombre es obligatorio')
+            ),
+            email: z.string().trim().min(
+                1,
+                t('usuarios.validation.email.required', 'El correo es obligatorio')
+            ).email(
+                t('usuarios.validation.email.invalid', 'El correo no es válido')
+            ),
+            password: z.string().min(
+                1,
+                t('usuarios.validation.password.required', 'La contraseña es obligatoria')
+            ).min(
+                8,
+                t('usuarios.validation.password.min', 'La contraseña debe tener al menos 8 caracteres')
+            ),
+            roleCode: z.string().trim().min(
+                1,
+                t('usuarios.validation.role.required', 'El rol es obligatorio')
+            )
+        });
+
+        const validateCreateForm = async () => {
+            const result = await validateWithSchema(createFormSchema(), createForm.value);
+            createFormErrors.value = result.errors;
+            return result.valid;
+        };
+
+        const updateFormSchema = () => z.object({
+            targetUserId: z.number(),
+            roleCode: z.string().trim().min(
+                1,
+                t('usuarios.validation.role.required', 'El rol es obligatorio')
+            ),
+            enabled: z.boolean()
+        });
+
+        const validateUpdatePayload = async (payload) => {
+            const result = await validateWithSchema(updateFormSchema(), payload);
+            return result.valid;
         };
 
         const fetchData = () => {
@@ -77,8 +127,17 @@ createApp({
                 });
         };
 
-        const submitCreate = () => {
+        const submitCreate = async () => {
             clearMessages();
+            clearCreateFormErrors();
+
+            const isValid = await validateCreateForm();
+            if (!isValid) {
+                errorMessage.value = Object.values(createFormErrors.value)[0]
+                    || t('usuarios.validation.form.invalid', 'Revisa los campos del formulario');
+                return;
+            }
+
             loading.value = true;
 
             service.createUser({
@@ -102,20 +161,29 @@ createApp({
                 createForm.value.fullName = '';
                 createForm.value.email = '';
                 createForm.value.password = '';
+                clearCreateFormErrors();
             }).finally(() => {
                 loading.value = false;
             });
         };
 
-        const submitUpdate = (user) => {
+        const submitUpdate = async (user) => {
             clearMessages();
-            loading.value = true;
 
-            service.updateUser({
+            const payload = {
                 targetUserId: user.id,
                 roleCode: user.roleCode,
                 enabled: user.enabledString === 'true'
-            }).then((result) => {
+            };
+            const isValid = await validateUpdatePayload(payload);
+            if (!isValid) {
+                errorMessage.value = t('usuarios.validation.form.invalid', 'Revisa los campos del formulario');
+                return;
+            }
+
+            loading.value = true;
+
+            service.updateUser(payload).then((result) => {
                 if (!result.success) {
                     errorMessage.value = result.message || t('usuarios.error.actualizar', 'No fue posible actualizar el usuario');
                     if (result.data) {
@@ -148,6 +216,7 @@ createApp({
             roles,
             errorMessage,
             successMessage,
+            createFormErrors,
             createForm,
             submitCreate,
             submitUpdate

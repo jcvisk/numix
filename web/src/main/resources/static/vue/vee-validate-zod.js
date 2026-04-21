@@ -4,7 +4,7 @@
  *
  * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
  */
-import{ZodObject as e,ZodDefault as t,ZodFirstPartyTypeKind as r}from"/npm/zod@3.25.56/+esm";import{isNotNestedPath as n,cleanupNonNestedPath as o}from"/npm/vee-validate@4.15.1/+esm";
+import{ZodObject as e,ZodDefault as t,ZodFirstPartyTypeKind as r}from"./zod.js";import{isNotNestedPath as n,cleanupNonNestedPath as o}from"./vee-validate.js";
 /**
   * vee-validate v4.15.1
   * (c) 2025 Abdelrahman Awad
