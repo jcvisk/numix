@@ -1,6 +1,7 @@
 package com.numix.web.controller.form;
 
 import com.numix.core.company.entity.CompanyStatus;
+import java.time.LocalDate;
 
 public class UpdateCompanyForm {
     private Long companyId;
@@ -13,6 +14,8 @@ public class UpdateCompanyForm {
     private String email;
     private String phone;
     private String address;
+    private String curp;
+    private LocalDate birthDate;
     private CompanyStatus status;
 
     public Long getCompanyId() {
@@ -93,6 +96,22 @@ public class UpdateCompanyForm {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getCurp() {
+        return curp;
+    }
+
+    public void setCurp(String curp) {
+        this.curp = curp;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
     public CompanyStatus getStatus() {

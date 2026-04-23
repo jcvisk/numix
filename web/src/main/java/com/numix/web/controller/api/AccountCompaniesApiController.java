@@ -54,7 +54,9 @@ public class AccountCompaniesApiController {
                 createForm.getBaseCurrencyId(),
                 createForm.getEmail(),
                 createForm.getPhone(),
-                createForm.getAddress()
+                createForm.getAddress(),
+                createForm.getCurp(),
+                createForm.getBirthDate()
             ));
             return new CompaniesApiActionResponse(true, "Empresa creada correctamente", buildCompaniesPageData(currentUser));
         } catch (AuthBusinessException ex) {
@@ -81,6 +83,8 @@ public class AccountCompaniesApiController {
                 updateForm.getEmail(),
                 updateForm.getPhone(),
                 updateForm.getAddress(),
+                updateForm.getCurp(),
+                updateForm.getBirthDate(),
                 updateForm.getStatus()
             ));
             return new CompaniesApiActionResponse(true, "Empresa actualizada correctamente", buildCompaniesPageData(currentUser));

@@ -101,6 +101,8 @@ public class CompanyService {
         company.setEmail(trimToNull(request.email()));
         company.setPhone(trimToNull(request.phone()));
         company.setAddress(trimToNull(request.address()));
+        company.setCurp(normalizeCurp(request.curp()));
+        company.setBirthDate(request.birthDate());
         company.setStatus(CompanyStatus.ACTIVE);
         company.setCreatedAt(now);
         company.setUpdatedAt(now);
@@ -136,6 +138,8 @@ public class CompanyService {
         company.setEmail(trimToNull(request.email()));
         company.setPhone(trimToNull(request.phone()));
         company.setAddress(trimToNull(request.address()));
+        company.setCurp(normalizeCurp(request.curp()));
+        company.setBirthDate(request.birthDate());
         company.setStatus(request.status() == null ? CompanyStatus.ACTIVE : request.status());
         company.setUpdatedAt(OffsetDateTime.now());
 
@@ -251,6 +255,18 @@ public class CompanyService {
         return normalized;
     }
 
+    private String normalizeCurp(String curp) {
+        String normalized = trimToNull(curp);
+        if (normalized == null) {
+            return null;
+        }
+        String uppercase = normalized.toUpperCase(Locale.ROOT);
+        if (uppercase.length() > 18) {
+            throw new AuthBusinessException("La CURP no puede exceder 18 caracteres");
+        }
+        return uppercase;
+    }
+
     private String trimToNull(String value) {
         if (value == null) {
             return null;
@@ -272,6 +288,8 @@ public class CompanyService {
             company.getEmail(),
             company.getPhone(),
             company.getAddress(),
+            company.getCurp(),
+            company.getBirthDate(),
             company.getStatus()
         );
     }

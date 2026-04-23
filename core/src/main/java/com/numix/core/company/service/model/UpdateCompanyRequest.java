@@ -1,6 +1,7 @@
 package com.numix.core.company.service.model;
 
 import com.numix.core.company.entity.CompanyStatus;
+import java.time.LocalDate;
 
 public record UpdateCompanyRequest(
     Long actorUserId,
@@ -14,6 +15,8 @@ public record UpdateCompanyRequest(
     String email,
     String phone,
     String address,
+    String curp,
+    LocalDate birthDate,
     CompanyStatus status
 ) {
 }

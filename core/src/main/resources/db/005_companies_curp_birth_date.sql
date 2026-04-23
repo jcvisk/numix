@@ -1,0 +1,5 @@
+ALTER TABLE companies
+    ADD COLUMN IF NOT EXISTS curp VARCHAR(18);
+
+ALTER TABLE companies
+    ADD COLUMN IF NOT EXISTS birth_date DATE;

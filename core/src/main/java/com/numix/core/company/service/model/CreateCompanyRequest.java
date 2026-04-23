@@ -1,5 +1,7 @@
 package com.numix.core.company.service.model;
 
+import java.time.LocalDate;
+
 public record CreateCompanyRequest(
     Long actorUserId,
     String name,
@@ -10,6 +12,8 @@ public record CreateCompanyRequest(
     Long baseCurrencyId,
     String email,
     String phone,
-    String address
+    String address,
+    String curp,
+    LocalDate birthDate
 ) {
 }

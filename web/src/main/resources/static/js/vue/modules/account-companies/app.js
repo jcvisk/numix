@@ -17,6 +17,8 @@ function normalizeCompanies(items) {
         email: company.email || '',
         phone: company.phone || '',
         address: company.address || '',
+        curp: company.curp || '',
+        birthDate: company.birthDate || '',
         status: company.status || 'ACTIVE'
     }));
 }
@@ -56,7 +58,9 @@ createApp({
             baseCurrencyId: null,
             email: '',
             phone: '',
-            address: ''
+            address: '',
+            curp: '',
+            birthDate: ''
         });
 
         const assignmentForm = ref({
@@ -73,7 +77,8 @@ createApp({
             legalName: z.string().trim().min(1, t('empresas.validation.legalName.required', 'La razón social es obligatoria')),
             taxId: z.string().trim().min(1, t('empresas.validation.taxId.required', 'El RFC/Tax ID es obligatorio')),
             fiscalRegime: z.string().trim().min(1, t('empresas.validation.fiscalRegime.required', 'El régimen fiscal es obligatorio')),
-            baseCurrencyId: z.number({ invalid_type_error: t('empresas.validation.currency.required', 'La moneda base es obligatoria') })
+            baseCurrencyId: z.number({ invalid_type_error: t('empresas.validation.currency.required', 'La moneda base es obligatoria') }),
+            curp: z.string().trim().max(18, t('empresas.validation.curp.max', 'La CURP no puede exceder 18 caracteres')).optional().or(z.literal(''))
         });
 
         const assignmentSchema = () => z.object({
@@ -146,7 +151,9 @@ createApp({
                     baseCurrencyId: currencies.value.length > 0 ? currencies.value[0].id : null,
                     email: '',
                     phone: '',
-                    address: ''
+                    address: '',
+                    curp: '',
+                    birthDate: ''
                 };
                 createFormErrors.value = {};
             } finally {
@@ -169,6 +176,8 @@ createApp({
                     email: company.email,
                     phone: company.phone,
                     address: company.address,
+                    curp: company.curp,
+                    birthDate: company.birthDate,
                     status: company.status
                 });
                 if (!result.success) {
